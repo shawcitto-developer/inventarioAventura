@@ -66,4 +66,4 @@ class Command(BaseCommand):
                 })
 
         self.stdout.write(self.style.SUCCESS(f'Listo. Contraseña de todos los usuarios de prueba: {CLAVE}'))
-python manage.py poblar_datos
+
