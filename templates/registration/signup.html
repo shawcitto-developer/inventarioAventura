@@ -1,0 +1,26 @@
+{% extends 'base/base_publica.html' %}
+{% block titulo %}Crear cuenta | Aventuras del Sur{% endblock %}
+{% block contenido %}
+<section class="seccion d-flex align-items-center" style="min-height: 100vh;">
+    <div class="container">
+        <div class="card tarjeta-oscura mx-auto" style="max-width: 30rem;">
+            <div class="card-body p-4">
+                <h3 class="text-center fw-bold mb-4">Crear cuenta de turista</h3>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% for campo in form %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+                        {{ campo }}
+                        {% for error in campo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-success w-100">Registrarme</button>
+                </form>
+                <hr>
+                <p class="text-center mb-0 small">¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

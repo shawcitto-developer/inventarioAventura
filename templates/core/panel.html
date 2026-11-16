@@ -1,0 +1,19 @@
+{% extends 'base/base_panel.html' %}
+{% block titulo %}Inicio{% endblock %}
+{% block encabezado %}Hola, {{ user.first_name|default:user.username }} 👋{% endblock %}
+{% block contenido %}
+<div class="row g-3">
+    {% if rol == 'admin' %}
+    <div class="col-6 col-lg-3"><a href="{% url 'usuario_lista' %}" class="text-decoration-none"><div class="card text-bg-primary h-100"><div class="card-body"><div class="fs-1 fw-bold">{{ datos.usuarios }}</div>Usuarios</div></div></a></div>
+    <div class="col-6 col-lg-3"><a href="{% url 'experiencia_lista' %}" class="text-decoration-none"><div class="card text-bg-success h-100"><div class="card-body"><div class="fs-1 fw-bold">{{ datos.experiencias }}</div>Experiencias</div></div></a></div>
+    <div class="col-6 col-lg-3"><a href="{% url 'reserva_lista' %}" class="text-decoration-none"><div class="card text-bg-info h-100"><div class="card-body"><div class="fs-1 fw-bold">{{ datos.reservas }}</div>Reservas</div></div></a></div>
+    <div class="col-6 col-lg-3"><a href="{% url 'reserva_lista' %}" class="text-decoration-none"><div class="card text-bg-warning h-100"><div class="card-body"><div class="fs-1 fw-bold">{{ datos.pendientes }}</div>Pagos pendientes</div></div></a></div>
+    {% elif rol == 'guia' %}
+    <div class="col-6"><a href="{% url 'experiencia_lista' %}" class="text-decoration-none"><div class="card text-bg-success h-100"><div class="card-body"><div class="fs-1 fw-bold">{{ datos.experiencias }}</div>Mis experiencias</div></div></a></div>
+    <div class="col-6"><div class="card text-bg-info h-100"><div class="card-body"><div class="fs-1 fw-bold">{{ datos.inscritos }}</div>Turistas inscritos</div></div></div>
+    {% else %}
+    <div class="col-6"><a href="{% url 'mis_reservas' %}" class="text-decoration-none"><div class="card text-bg-success h-100"><div class="card-body"><div class="fs-1 fw-bold">{{ datos.reservas }}</div>Mis reservas</div></div></a></div>
+    <div class="col-6"><a href="{% url 'catalogo' %}" class="text-decoration-none"><div class="card text-bg-primary h-100"><div class="card-body"><div class="fs-1 fw-bold">{{ datos.disponibles }}</div>Experiencias disponibles</div></div></a></div>
+    {% endif %}
+</div>
+{% endblock %}

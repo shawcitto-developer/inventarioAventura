@@ -1,0 +1,50 @@
+:root { --acento: #2fbf71; --fondo: #000; --fondo-alt: #0d0d0d; }
+
+html { scroll-behavior: smooth; }
+body.publico { background: var(--fondo); color: #fff; font-family: 'Poppins', sans-serif; }
+
+/* Barra superior */
+.barra-publica { background: rgba(0, 0, 0, .85); backdrop-filter: blur(6px); }
+.barra-publica .nav-link { font-weight: 600; }
+.barra-publica .nav-link:hover { color: var(--acento); }
+
+/* Hero: la foto va a la derecha y se funde con el negro */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background:
+        linear-gradient(90deg, #000 35%, rgba(0, 0, 0, .35) 100%),
+        url('../img/hero.jpg') right center / cover no-repeat,
+        #000;
+}
+.hero-texto { border-left: 4px solid #fff; padding-left: 1.5rem; max-width: 36rem; }
+.hero-saludo { font-weight: 700; font-size: 1.1rem; margin-bottom: .25rem; }
+.hero-titulo { font-weight: 800; font-size: clamp(2.4rem, 8vw, 4.5rem); line-height: 1.05; margin-bottom: .75rem; }
+.hero-subtitulo { font-weight: 700; font-size: clamp(1.1rem, 3.5vw, 1.8rem); margin-bottom: 1.5rem; }
+.btn-boton-hero {
+    background: linear-gradient(135deg, #1e7a49, var(--acento));
+    color: #fff; font-weight: 700; font-size: .8rem;
+    text-transform: uppercase; letter-spacing: .05em; padding: .7rem 1.4rem;
+}
+.btn-boton-hero:hover { color: #fff; filter: brightness(1.15); }
+
+.hero-redes { position: absolute; left: 1.5rem; bottom: 1.5rem; display: flex; gap: 1.25rem; }
+.hero-redes a { color: #fff; font-size: 1.2rem; }
+.hero-redes a:hover { color: var(--acento); }
+
+/* Secciones */
+.seccion { padding: 5rem 0; }
+.seccion-alterna { background: var(--fondo-alt); }
+.titulo-seccion { font-weight: 800; text-align: center; margin-bottom: 2.5rem; }
+.tarjeta-oscura { background: #111; border: 1px solid #222; }
+.icono-paso { font-size: 2.8rem; color: var(--acento); }
+
+/* Celulares: el hero se apila y la barra vertical se mantiene */
+@media (max-width: 767.98px) {
+    .hero { background: linear-gradient(180deg, rgba(0,0,0,.65), #000 85%), url('../img/hero.jpg') center / cover no-repeat, #000; padding-top: 5rem; }
+    .hero-redes { position: static; margin: 2rem 0 0 1.5rem; }
+    .hero { flex-direction: column; justify-content: center; align-items: flex-start; }
+    .seccion { padding: 3.5rem 0; }
+}

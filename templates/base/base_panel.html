@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>{% block titulo %}Panel{% endblock %} | Aventuras del Sur</title>
+    <link href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0/dist/css/adminlte.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" rel="stylesheet">
+</head>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+<div class="app-wrapper">
+
+    <!-- Barra superior -->
+    <nav class="app-header navbar navbar-expand bg-body">
+        <div class="container-fluid">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button" aria-label="Menú"><i class="bi bi-list fs-4"></i></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto align-items-center gap-2">
+                <li class="nav-item d-none d-md-block">
+                    <span class="text-secondary small">{{ user.get_full_name|default:user.username }} · {{ user.perfil.get_rol_display }}</span>
+                </li>
+                <li class="nav-item">
+                    <form method="post" action="{% url 'logout' %}" class="m-0">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-box-arrow-right"></i> Salir</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Menú lateral (cambia según el rol) -->
+    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+        <div class="sidebar-brand">
+            <a href="{% url 'landing' %}" class="brand-link"><i class="bi bi-tree-fill text-success ms-3 me-2"></i><span class="brand-text fw-light">Aventuras del Sur</span></a>
+        </div>
+        <div class="sidebar-wrapper">
+            <nav class="mt-2">
+                {% with u=request.resolver_match.url_name %}
+                <ul class="nav sidebar-menu flex-column" role="menu">
+                    <li class="nav-item"><a href="{% url 'panel' %}" class="nav-link {% if u == 'panel' %}active{% endif %}"><i class="nav-icon bi bi-speedometer2"></i><p>Inicio</p></a></li>
+
+                    {% if rol == 'admin' %}
+                    <li class="nav-item"><a href="{% url 'categoria_lista' %}" class="nav-link {% if u == 'categoria_lista' %}active{% endif %}"><i class="nav-icon bi bi-tags"></i><p>Categorías</p></a></li>
+                    <li class="nav-item"><a href="{% url 'experiencia_lista' %}" class="nav-link {% if u == 'experiencia_lista' %}active{% endif %}"><i class="nav-icon bi bi-compass"></i><p>Experiencias</p></a></li>
+                    <li class="nav-item"><a href="{% url 'reserva_lista' %}" class="nav-link {% if u == 'reserva_lista' %}active{% endif %}"><i class="nav-icon bi bi-ticket-perforated"></i><p>Reservas</p></a></li>
+                    <li class="nav-item"><a href="{% url 'usuario_lista' %}" class="nav-link {% if u == 'usuario_lista' %}active{% endif %}"><i class="nav-icon bi bi-people"></i><p>Usuarios</p></a></li>
+                    {% elif rol == 'guia' %}
+                    <li class="nav-item"><a href="{% url 'experiencia_lista' %}" class="nav-link {% if u == 'experiencia_lista' %}active{% endif %}"><i class="nav-icon bi bi-compass"></i><p>Mis experiencias</p></a></li>
+                    {% else %}
+                    <li class="nav-item"><a href="{% url 'catalogo' %}" class="nav-link {% if u == 'catalogo' %}active{% endif %}"><i class="nav-icon bi bi-grid"></i><p>Catálogo</p></a></li>
+                    <li class="nav-item"><a href="{% url 'mis_reservas' %}" class="nav-link {% if u == 'mis_reservas' %}active{% endif %}"><i class="nav-icon bi bi-ticket-perforated"></i><p>Mis reservas</p></a></li>
+                    {% endif %}
+                </ul>
+                {% endwith %}
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Contenido -->
+    <main class="app-main">
+        <div class="app-content-header">
+            <div class="container-fluid"><h3 class="mb-0">{% block encabezado %}{% endblock %}</h3></div>
+        </div>
+        <div class="app-content">
+            <div class="container-fluid">
+                {% block contenido %}{% endblock %}
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer"><strong>Aventuras del Sur</strong> · Ecoparque y Reserva Natural</footer>
+</div>
+
+<!-- Mensajes flotantes (desaparecen solos) -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 2000; max-width: 100%;">
+    {% for m in messages %}
+    <div class="alert alert-{{ m.tags }} alert-dismissible alerta-flotante shadow" role="alert">
+        {{ m }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- UN solo modal para todo el sistema: crear, editar y confirmar -->
+<div class="modal fade" id="modalGeneral" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-sm-down">
+        <div class="modal-content" id="modalContenido"></div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0/dist/js/adminlte.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+<script src="{% static 'js/crud.js' %}"></script>
+</body>
+</html>
+

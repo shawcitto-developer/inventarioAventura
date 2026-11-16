@@ -1,0 +1,47 @@
+{% extends 'base/base_panel.html' %}
+{% load humanize %}
+{% block titulo %}Catálogo{% endblock %}
+{% block encabezado %}Catálogo de experiencias{% endblock %}
+{% block contenido %}
+<div class="row g-2 mb-3">
+    <div class="col-12 col-md-8">
+        <input type="search" id="buscador" class="form-control" placeholder="Buscar experiencia...">
+    </div>
+    <div class="col-12 col-md-4">
+        <select id="filtroCategoria" class="form-select">
+            <option value="">Todas las categorías</option>
+            {% for c in categorias %}<option value="{{ c.nombre|lower }}">{{ c.nombre }}</option>{% endfor %}
+        </select>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+    {% for e in experiencias %}
+    <div class="col item-exp" data-texto="{{ e.titulo|lower }} {{ e.descripcion|lower }}" data-cat="{{ e.categoria.nombre|lower }}">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column">
+                <span class="badge text-bg-success align-self-start mb-2">{{ e.categoria.nombre }}</span>
+                <h5 class="card-title">{{ e.titulo }}</h5>
+                <p class="card-text text-secondary flex-grow-1">{{ e.descripcion|truncatechars:110 }}</p>
+                <ul class="list-unstyled small mb-3">
+                    <li><i class="bi bi-calendar-event"></i> {{ e.fecha_hora|date:'d/m/Y H:i' }}</li>
+                    <li><i class="bi bi-people"></i> {{ e.disponibles }} cupos disponibles</li>
+                </ul>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fs-5 fw-bold">${{ e.precio|intcomma }}</span>
+                    {% if e.id in inscritas %}
+                    <a href="{% url 'mis_reservas' %}" class="btn btn-outline-success btn-sm"><i class="bi bi-check-lg"></i> Inscrito</a>
+                    {% elif e.disponibles <= 0 %}
+                    <button class="btn btn-secondary btn-sm" disabled>Sin cupos</button>
+                    {% else %}
+                    <button class="btn btn-success btn-sm" data-post-url="{% url 'inscribir' e.id %}">Inscribirme</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12"><div class="alert alert-info">Por ahora no hay experiencias disponibles.</div></div>
+    {% endfor %}
+</div>
+{% endblock %}

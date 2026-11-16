@@ -1,0 +1,9 @@
+{% extends 'base/base_publica.html' %}
+{% block titulo %}Sin permiso{% endblock %}
+{% block contenido %}
+<section class="seccion text-center" style="padding-top: 8rem;">
+    <h1 class="display-1 fw-bold">403</h1>
+    <p class="lead">Tu rol no tiene permiso para entrar a esta página.</p>
+    <a href="{% url 'panel' %}" class="btn btn-success">Volver a mi panel</a>
+</section>
+{% endblock %}
